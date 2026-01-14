@@ -1,7 +1,7 @@
 import os
 import time
 import json
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from pathlib import Path
 import traceback
 import requests
@@ -66,7 +66,7 @@ class Gemini(BaseModel):
       and will raise helpful errors if the client isn't configured.
     """
 
-    def __init__(self, model: str, output_dir: Optional[str] = None):
+    def __init__(self, model: str, output_dir: str | None = None):
         super().__init__(model, output_dir)
         if _client is None:
             raise RuntimeError(
@@ -159,7 +159,7 @@ class Gemini(BaseModel):
             raise
 
     async def extract_from_text(
-        self, text: Any, schema: Dict[str, Any], imageBase64s=None
+        self, text: str, schema: Dict[str, Any], imageBase64s=None
     ) -> ExtractionResult:
         t0 = time.perf_counter()
         filtered_schema = self.convert_schema_for_gemini(schema)
@@ -170,7 +170,7 @@ class Gemini(BaseModel):
             response = await asyncio.to_thread(
                 lambda: self.client.models.generate_content(
                     model=self.model,
-                    contents=[text],
+                    contents=[types.Part.from_text(text=text)],
                     config=self.config,
                 )
             )

@@ -4,7 +4,7 @@ import time
 import asyncio
 import traceback
 import json
-from typing import Any, Optional, Dict
+from typing import Any, Dict
 import base64
 
 from .base import BaseModel
@@ -97,7 +97,7 @@ def _extract_json_from_text(text: str) -> Any:
     raise ValueError("Could not extract valid JSON from text")
 
 
-class OpenAIProvider(BaseModel):
+class GPT(BaseModel):
     """Provider for OpenAI-compatible endpoints (e.g., compatible OpenAI servers).
 
     Uses `COMPATIBLE_OPENAI_API_KEY` and optional `COMPATIBLE_OPENAI_BASE_URL`.
@@ -105,7 +105,7 @@ class OpenAIProvider(BaseModel):
     run even if the installed OpenAI client has a different API surface.
     """
 
-    def __init__(self, model: str, output_dir: Optional[str] = None):
+    def __init__(self, model: str, output_dir: str | None = None):
         super().__init__(model, output_dir)
         self.client = OpenAI()
 

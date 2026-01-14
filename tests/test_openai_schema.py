@@ -1,4 +1,4 @@
-from ocr_benchmark.models.openai import OpenAIProvider
+from ocr_benchmark.models.openai import GPT
 
 
 def test_convert_schema_for_openai_adds_required_and_disallows_additional():
@@ -19,7 +19,7 @@ def test_convert_schema_for_openai_adds_required_and_disallows_additional():
         },
     }
 
-    converted = OpenAIProvider.convert_schema_for_openai(None, schema)
+    converted = GPT.convert_schema_for_openai(None, schema)
 
     # top-level object should disallow additionalProperties and require 'totals' and 'items'
     assert converted.get("additionalProperties") is False
