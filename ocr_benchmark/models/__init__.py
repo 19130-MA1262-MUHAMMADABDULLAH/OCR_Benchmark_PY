@@ -1,11 +1,9 @@
-from typing import Optional
-
 from .gemini import Gemini
 from .openai import GPT
 from .documentai import DocumentAI
 
 
-def get_model_provider(name: Optional[str], output_dir: Optional[str] = None):
+def get_model_provider(name: str | None, output_dir: str | None = None):
     """Return a provider instance for a given model name.
 
     Heuristics-based factory: matches model name patterns to available
@@ -13,6 +11,7 @@ def get_model_provider(name: Optional[str], output_dir: Optional[str] = None):
     like "ground-truth". If no provider is implemented for the given
     name, raises NotImplementedError.
     """
+
     if not name:
         return None
 
@@ -20,15 +19,16 @@ def get_model_provider(name: Optional[str], output_dir: Optional[str] = None):
     if key == "ground-truth":
         return None
 
-    # Google / Gemini family
-    if "gemini" in key or key.startswith("g-"):
+    # Gemini family
+    if "gemini" in key:
         return Gemini(name, output_dir)
-    
-    if "google" in key:
+
+    # Google Document AI
+    if key == "google-document-ai":
         return DocumentAI(name, output_dir)
 
     # OpenAI-like models (gpt, gpt-4, etc.)
-    if "openai" in key or key.startswith("gpt") or "gpt" in key:
+    if key.startswith("gpt"):
         return GPT(name, output_dir)
 
     # No provider implemented for this model name
